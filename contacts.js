@@ -1,6 +1,5 @@
-import { constants } from "buffer";
-import fs from "fs/promises";
 import { nanoid } from "nanoid";
+import fs from "fs/promises";
 import path from "path";
 
 const contactsPath = path.resolve("db", "contacts.json");
@@ -8,19 +7,19 @@ const contactsPath = path.resolve("db", "contacts.json");
 const updateContacts = (contacts) =>
   fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
 
-export const listContacts = async () => {
+export const getContactsList = async () => {
   const contacts = await fs.readFile(contactsPath);
   return JSON.parse(contacts);
 };
 
 export const getContactById = async (id) => {
-  const contacts = await listContacts();
+  const contacts = await getContactsList();
   const contact = contacts.find((contact) => contact.id === id);
   return contact || null;
 };
 
-export const removeContact = async (id) => {
-  const contacts = await listContacts();
+export const getRemoveContact = async (id) => {
+  const contacts = await getContactsList();
   const index = contacts.findIndex((contact) => contact.id === id);
   if (index === -1) {
     return null;
@@ -30,8 +29,8 @@ export const removeContact = async (id) => {
   return result;
 };
 
-export const addContact = async ({ name, email, phone }) => {
-  const contacts = await listContacts();
+export const setNewContact = async ({ name, email, phone }) => {
+  const contacts = await getContactsList();
   const newContact = {
     id: nanoid(),
     name,
